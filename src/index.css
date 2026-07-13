@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+/*
+  Thème "cuisine chaleureuse" : fond crème, accents ambrés.
+  On garde des tailles de texte généreuses et des cibles tactiles ≥ 44 px
+  (préparation à une future app mobile PWA / Capacitor).
+*/
+
+@theme {
+  --color-creme: #fdf9f0;
+  --color-encre: #3b2f23;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--color-creme);
+  color: var(--color-encre);
+  font-family: ui-rounded, "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+/* Petite animation d'apparition pour les toasts et modales */
+@keyframes apparition {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animation-apparition {
+  animation: apparition 0.18s ease-out;
+}
