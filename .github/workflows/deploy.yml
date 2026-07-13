@@ -1,0 +1,54 @@
+# Déploiement automatique sur GitHub Pages à chaque push.
+# L'application est 100 % statique : on construit avec Vite puis on publie dist/.
+name: Déployer sur GitHub Pages
+
+on:
+  push:
+    branches: [claude/food-storage-inventory-app-vjccbj, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deployer:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Construire l'application
+        run: npm run build
+
+      - name: Configurer GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          # Active GitHub Pages automatiquement si ce n'est pas déjà fait
+          enablement: true
+
+      - name: Téléverser le build
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Déployer
+        id: deploiement
+        uses: actions/deploy-pages@v4
